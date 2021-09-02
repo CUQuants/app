@@ -1,3 +1,11 @@
+"""
+Created on Thu Sep  2
+
+@author: diegoalvarez
+@email: diego.alvarez@colorado.edu
+@email: diegoalvarez3800@gmail.com
+"""
+
 import yfinance as yf
 import datetime as dt
 import streamlit as st
