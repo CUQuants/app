@@ -1,3 +1,11 @@
+"""
+Created on Thu Sep  2
+
+@author: diegoalvarez
+@email: diego.alvarez@colorado.edu
+@email: diegoalvarez3800@gmail.com
+"""
+
 import numpy as np
 import pandas as pd
 import streamlit as st
