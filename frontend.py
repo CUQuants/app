@@ -1,3 +1,9 @@
+"""
+Created on Thu Sep  2
+
+@author: diegoalvarez
+"""
+
 import pandas as pd
 import datetime as dt
 import yfinance as yf
