@@ -1,11 +1,3 @@
-"""
-Created on Thu Sep  2
-
-@author: diegoalvarez
-@email: diego.alvarez@colorado.edu
-@email: diegoalvarez3800@gmail.com
-"""
-
 import pandas as pd
 import datetime as dt
 import yfinance as yf
