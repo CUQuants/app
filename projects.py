@@ -1,11 +1,3 @@
-"""
-Created on Thu Sep  2
-
-@author: diegoalvarez
-@email: diego.alvarez@colorado.edu
-@email: diegoalvarez3800@gmail.com
-"""
-
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -19,8 +11,7 @@ class Projects():
         self.codebase_library = pd.read_csv(self.codebase_url)
         
     def get_list(self):
-        return(self.codebase_library[["title", "area", "programming", "programming level", "math", "math level",
-                                      "finance / econ", "finance / econ level", "ideal majors"]])
+        st.write(self.codebase_library)
     
     def get_prepared(self):
         
