@@ -10,8 +10,20 @@ class Projects():
         self.codebase_url = self.codebase_url.replace('/edit#gid=', '/export?format=csv&gid=')
         self.codebase_library = pd.read_csv(self.codebase_url)
         
+        self.open_source_project_url = "https://docs.google.com/spreadsheets/d/1F1QzElHO0dz4t8JPOEmEPDq13aa60Lbz9ildPm_KTnU/edit#gid=0"
+        self.open_source_project_url = self.open_source_project_url.replace('/edit#gid=', '/export?format=csv&gid=')
+        self.open_source_project = pd.read_csv(self.open_source_project_url)
+        
+    def get_open_source_list(self):
+        
+        st.title("Open Source Projects")
+        for i in range(len(self.open_source_project)):
+            st.header(self.open_source_project[self.open_source_project.columns[0]][i])
+            st.write(self.open_source_project[self.open_source_project.columns[1]][i])
+    
     def get_list(self):
-        st.write(self.codebase_library)
+        st.write(self.codebase_library)       
+        self.get_open_source_list()
     
     def get_prepared(self):
         
@@ -21,3 +33,5 @@ class Projects():
             st.write(row[1], row[2], row[3], row[4])
             break
             
+
+        
