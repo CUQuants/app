@@ -14,16 +14,30 @@ class Projects():
         self.open_source_project_url = self.open_source_project_url.replace('/edit#gid=', '/export?format=csv&gid=')
         self.open_source_project = pd.read_csv(self.open_source_project_url)
         
+        self.packages_url = "https://docs.google.com/spreadsheets/d/1BVYK4qmgZaUJHw0x1Xq8G8EvuS-5-JIK009Ll1WeDNE/edit#gid=0"
+        self.packages_url = self.packages_url.replace('/edit#gid=', '/export?format=csv&gid=')
+        self.packages = pd.read_csv(self.packages_url)
+        
     def get_open_source_list(self):
         
         st.title("Open Source Projects")
         for i in range(len(self.open_source_project)):
             st.header(self.open_source_project[self.open_source_project.columns[0]][i])
             st.write(self.open_source_project[self.open_source_project.columns[1]][i])
+            
+    def get_packages_list(self):
+        
+        st.title("Integration of Packages:")
+        for i in range(len(self.packages)):
+            st.header(self.packages[self.packages.columns[0]][i])
+            st.write(self.packages[self.packages.columns[1]][i])
+            link = self.packages[self.packages.columns[2]][i]
+            st.write("see examples:", link)
     
     def get_list(self):
         st.write(self.codebase_library)       
         self.get_open_source_list()
+        self.get_packages_list()
     
     def get_prepared(self):
         
