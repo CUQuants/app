@@ -26,16 +26,8 @@ if sidebar == "projects and backend":
     projects = Projects()
     
     st.title("Projects and backend")
-    st.write(projects.get_list())
+    projects.get_list()
+    #test = projects.get_prepared()
     
-    test = projects.get_prepared()
     
-    
-'''
-    st.subheader("Codebase & Library: Not completed")
-    st.subheader("Codebase & Library: Partially Completed")
-    st.subheader("Codebase & Library: Completed")
-    st.subheader("Projects")
-    st.subheader("Backend")
-'''
 
