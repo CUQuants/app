@@ -29,12 +29,14 @@ class Projects():
         
         st.title("Integration of Packages:")
         for i in range(len(self.packages)):
+            
             st.header(self.packages[self.packages.columns[0]][i])
             st.write(self.packages[self.packages.columns[1]][i])
             link = self.packages[self.packages.columns[2]][i]
             st.write("see examples:", link)
     
     def get_list(self):
+        
         st.write(self.codebase_library)       
         self.get_open_source_list()
         self.get_packages_list()
@@ -43,6 +45,7 @@ class Projects():
         
         for i in range(len(self.codebase_library)):
             
+            st.write("problem here")
             row = self.codebase_library.iloc[i]
             st.write(row[1], row[2], row[3], row[4])
             break
