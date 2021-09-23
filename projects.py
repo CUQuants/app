@@ -39,6 +39,10 @@ class Projects():
         
         st.write(self.codebase_library)       
         self.get_open_source_list()
+        
+        st.write('Backend Infrastructure list: [here](https://docs.google.com/spreadsheets/d/1falnY478mZZAY3lVGpDhpechekfTQvQK-F2DoxIvLyk/edit?usp=sharing)')
+        st.write('Bugs list: [here](https://docs.google.com/spreadsheets/d/1h0mNp1qTaz2XPqChcETDdqLye0v_oXdT1v5dsbdSTig/edit?usp=sharing)')
+
         self.get_packages_list()
     
     def get_prepared(self):
