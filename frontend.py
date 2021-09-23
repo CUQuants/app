@@ -24,8 +24,6 @@ if sidebar == "security analysis":
 if sidebar == "projects and backend":
 
     projects = Projects()
-    
-    st.title("Projects and backend")
     projects.get_list()
     #test = projects.get_prepared()
     

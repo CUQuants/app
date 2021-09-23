@@ -21,13 +21,20 @@ class Projects():
     def get_open_source_list(self):
         
         st.title("Open Source Projects")
+        st.write("If you are interested in working on any of these projects please fill out our form [here](https://forms.gle/oTh3nZJ4ffcd33KfA)")
+
         for i in range(len(self.open_source_project)):
             st.header(self.open_source_project[self.open_source_project.columns[0]][i])
             st.write(self.open_source_project[self.open_source_project.columns[1]][i])
             
+        st.write('Backend Infrastructure list: [here](https://docs.google.com/spreadsheets/d/1falnY478mZZAY3lVGpDhpechekfTQvQK-F2DoxIvLyk/edit?usp=sharing)')
+        st.write('Bugs list: [here](https://docs.google.com/spreadsheets/d/1h0mNp1qTaz2XPqChcETDdqLye0v_oXdT1v5dsbdSTig/edit?usp=sharing)')
+
     def get_packages_list(self):
         
         st.title("Integration of Packages:")
+        st.write("If you are interested in working on any of these projects please fill out our form [here](https://forms.gle/9s5PyHr46ArMPuTG6)")
+
         for i in range(len(self.packages)):
             
             st.header(self.packages[self.packages.columns[0]][i])
@@ -37,11 +44,11 @@ class Projects():
     
     def get_list(self):
         
+        st.title("Projects and backend")
+        st.write("If you are interested in working on any of these projects please fill out our form [here](https://forms.gle/rPC4N9WmpjPJ5Kxa6)")
         st.write(self.codebase_library)       
         self.get_open_source_list()
         
-        st.write('Backend Infrastructure list: [here](https://docs.google.com/spreadsheets/d/1falnY478mZZAY3lVGpDhpechekfTQvQK-F2DoxIvLyk/edit?usp=sharing)')
-        st.write('Bugs list: [here](https://docs.google.com/spreadsheets/d/1h0mNp1qTaz2XPqChcETDdqLye0v_oXdT1v5dsbdSTig/edit?usp=sharing)')
 
         self.get_packages_list()
     
