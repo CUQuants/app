@@ -4,11 +4,13 @@ import pandas as pd
 import datetime as dt
 
 
-# TODO: convert to standalone wrapper library
+# TODO: move to standalone wrapper library
 class SecuritySummary:
+    """
+    Wrapper for simplified access to details about a specific security.
+    """
 
     def __init__(self, symbol):
-
         self.symbol = symbol
 
         self.ticker_info = yf.Ticker(self.symbol).get_info()

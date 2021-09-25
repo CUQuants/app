@@ -112,7 +112,7 @@ class SecurityDetail(View):
         col1, col2 = st.columns((9, 1))
 
         with col2:
-            log = st.checkbox("Logarithmic", len(self.data.securities) > 1)
+            log = st.checkbox("Logarithmic", len(self.data.symbols) > 1)
             diff = st.checkbox("Difference")
             normalize = st.checkbox("Normalize")
             standardize = st.checkbox("Standardize")

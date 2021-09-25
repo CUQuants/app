@@ -7,16 +7,19 @@ import datetime as dt
 from app import utils
 
 
-# TODO: convert to standalone wrapper library
+# TODO: move to standalone wrapper library
 class SecurityData:
+    """
+    Wrapper around a `pandas.DataFrame` consisting of OHLCV data for one or more securities.
+    """
 
-    def __init__(self, securities):
-        self.securities = securities
+    def __init__(self, symbols):
+        self.symbols = symbols
 
         end = dt.date.today()
         start = dt.date(end.year - 50, end.month, end.day)
 
-        self.df = yf.download(self.securities, start, end) if len(securities) else pd.DataFrame()
+        self.df = yf.download(self.symbols, start, end) if len(symbols) else pd.DataFrame()
         self.df.sort_index(inplace=True)
 
     def get_start_end(self):
