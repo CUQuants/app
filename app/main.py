@@ -18,7 +18,7 @@ class Main(View):
         ]
 
     def render(self):
-        st.set_page_config(layout="wide")
+        st.set_page_config(page_title='CU Quants', layout="wide")
 
         # TODO: Include a button to reset cache?
         # st.sidebar.button('Clear Cache', lambda: requests_cache.clear())
