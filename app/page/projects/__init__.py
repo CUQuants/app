@@ -34,10 +34,8 @@ class ProjectsPage(Page):
             st.subheader(row['Name'])
             st.write(row['Description'])
 
-        st.write(
-            'Backend Infrastructure list: [here](https://docs.google.com/spreadsheets/d/1falnY478mZZAY3lVGpDhpechekfTQvQK-F2DoxIvLyk/edit?usp=sharing)')
-        st.write(
-            'Bugs list: [here](https://docs.google.com/spreadsheets/d/1h0mNp1qTaz2XPqChcETDdqLye0v_oXdT1v5dsbdSTig/edit?usp=sharing)')
+        st.write('Backend Infrastructure list [here](https://github.com/CUQuants/app/issues)')
+        st.write('Bugs list: [here](https://github.com/CUQuants/app/issues)')
 
     def render_packages(self):
         st.header("Integration of Packages")
