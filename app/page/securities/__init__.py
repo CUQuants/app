@@ -1,6 +1,6 @@
 import streamlit as st
 import datetime as dt
-from dateutil import relativedelta
+import pandas as pd
 
 from app.page import Page
 from app.view import View
@@ -94,16 +94,14 @@ class SecurityDetail(View):
 
             if dates_method == "Slider":
                 start, end = st.slider("Select time frame:", value=self.data.get_start_end())
-
-            if dates_method == "Months back":
+            elif dates_method == "Months back":
                 months = st.number_input("Select months:", min_value=1)
-                end = dt.date.today()
-                start = end - relativedelta(months=months)
-
-            if dates_method == "Years back":
+                end = dt.datetime.today()
+                start = end - pd.DateOffset(months=months)
+            elif dates_method == "Years back":
                 years = st.number_input("Select years:", min_value=1)
-                end = dt.date.today()
-                start = end - relativedelta(years=years)
+                end = dt.datetime.today()
+                start = end - pd.DateOffset(years=years)
 
         return start, end, columns
 
