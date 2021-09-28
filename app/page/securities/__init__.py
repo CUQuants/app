@@ -109,13 +109,15 @@ class SecurityDetail(View):
 
     def plot_with_controls(self, start, end, columns):
 
-        col1, col2 = st.columns((9, 1))
+        col1, col2 = st.columns((8, 2))
 
         with col2:
             log = st.checkbox("Logarithmic", len(self.data.symbols) > 1)
             diff = st.checkbox("Difference")
             normalize = st.checkbox("Normalize")
             standardize = st.checkbox("Standardize")
+            trend_window = st.number_input("Moving Average", min_value=0, max_value=len(self.data.df.index), step=5)
+            subtract_trend = st.checkbox("Subtract Trend") if trend_window else 0
 
             df = self.data.preprocess(
                 start=start,
@@ -125,6 +127,8 @@ class SecurityDetail(View):
                 diff=diff,
                 normalize=normalize,
                 standardize=standardize,
+                trend_window=trend_window,
+                subtract_trend=subtract_trend,
             )
 
         with col1:

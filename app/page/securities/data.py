@@ -30,7 +30,18 @@ class SecurityData:
             return self.df.columns.levels[0]
         return self.df.columns
 
-    def preprocess(self, start=None, end=None, columns=None, log=False, diff=False, normalize=False, standardize=False):
+    def preprocess(
+            self,
+            start=None,
+            end=None,
+            columns=None,
+            log=False,
+            diff=False,
+            normalize=False,
+            standardize=False,
+            trend_window=0,
+            subtract_trend=False,
+    ):
         df = self.df
 
         if start is not None:
@@ -53,5 +64,9 @@ class SecurityData:
 
         if standardize:
             df = utils.standardize(df)
+
+        if trend_window > 0:
+            df_trend = df.rolling(trend_window).mean()
+            df = df - df_trend if subtract_trend else df_trend
 
         return df
