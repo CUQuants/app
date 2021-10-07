@@ -6,7 +6,7 @@
 
 ---
 
-## How to run the project locally:
+## How to run the app locally:
 
 - Make sure [Git](https://git-scm.com/downloads) and [Python 3](https://www.python.org/downloads/) are installed on your computer.
 - Open a console in the directory where you want to download the project's source code.
