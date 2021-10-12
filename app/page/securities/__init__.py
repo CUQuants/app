@@ -1,20 +1,31 @@
+import os
+
 import streamlit as st
 import datetime as dt
 import pandas as pd
 
 from app.page import Page
+from app.utils import load_directory
 from app.view import View
 from app.page.securities.summary import SecuritySummary
 from app.page.securities.data import SecurityData
 
 
 class SecurityPage(Page):
+    key = 'securities'
     title = 'Security Analysis'
     symbols_query_param = 'symbols'
 
+    query_steps = st.experimental_get_query_params().get('step', [])
+
+    step_path = os.path.join(os.path.dirname(__file__), '../../step')
+
+    def __init__(self):
+        self.step_modules = load_directory(self.step_path)
+
     def render(self):
-        security_function_options = ["All", "General"]
-        security_function = st.sidebar.selectbox("Security function:", security_function_options)
+        # security_function_options = ['All', 'General']
+        # security_function = st.sidebar.selectbox("Security function:", security_function_options)
 
         # Use symbols from URL query param
         default_symbols = st.experimental_get_query_params().get(self.symbols_query_param, '')
@@ -29,6 +40,29 @@ class SecurityPage(Page):
 
         detail = SecurityDetail(symbols)
         detail.render()
+
+        if len(symbols):
+            current_data = detail.data
+
+            for i in range(100):  # Limit number of steps in case of infinite loop
+                if i < len(self.query_steps):
+                    # Load step from query param
+                    module = self.step_modules.get(self.query_steps[i], None)
+                    st.write(module)
+                    if not module:
+                        continue
+                    st.write(f'## Step from query param: {module.title}')
+                else:
+                    # Load step from dropdown
+                    names = sorted(name for name, module in self.step_modules.items() if module.is_valid(current_data))
+                    default_option = '...'
+                    titles = [self.step_modules[name].title for name in names]
+                    title = st.selectbox('Add step:', [default_option] + titles, key=f'step_{i}')
+                    if title == default_option:
+                        break
+                    module = self.step_modules[names[titles.index(title)]]
+
+                current_data = module.render(current_data) or current_data
 
 
 class SecurityDetail(View):

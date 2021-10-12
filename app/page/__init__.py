@@ -7,4 +7,5 @@ class Page(View):
     """
     Base class for top-level page views.
     """
+    key = ''
     title = 'Unnamed Page'

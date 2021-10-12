@@ -1,23 +1,24 @@
 import streamlit as st
 
 from app.page import Page
-from app.utils import read_google_drive
+from app.utils import read_google_spreadsheet
 
 
 class ProjectsPage(Page):
+    key = 'projects'
     title = 'Projects and Backend'
 
     sheet_id = '1y-0I1ObMmBNRjSCXQHVt81bBOaz5_X6r0jRvElhtYxM'
 
-    topics = read_google_drive(sheet_id, 0)
-    packages = read_google_drive(sheet_id, 329368905)
-    open_source_projects = read_google_drive(sheet_id, 985331080)
+    topics = read_google_spreadsheet(sheet_id, 0)
+    packages = read_google_spreadsheet(sheet_id, 329368905)
+    open_source_projects = read_google_spreadsheet(sheet_id, 985331080)
 
     def render(self):
         self.render_topics()
-        st.markdown('---')
+        st.write('---')
         self.render_open_source_projects()
-        st.markdown('---')
+        st.write('---')
         self.render_packages()
 
     def render_topics(self):
