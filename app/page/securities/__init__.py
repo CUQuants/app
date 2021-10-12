@@ -16,7 +16,7 @@ class SecurityPage(Page):
     title = 'Security Analysis'
     symbols_query_param = 'symbols'
 
-    query_steps = st.experimental_get_query_params().get('step', [])
+    query_steps = st.experimental_get_query_params().get('steps', [])
 
     step_path = os.path.join(os.path.dirname(__file__), '../../step')
 
