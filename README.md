@@ -1,4 +1,4 @@
-# CU Quants - Concept Demo App
+# CU Quants App
 
 ### [Visit the app](https://share.streamlit.io/cuquants/app/main/frontend.py)
 
@@ -31,7 +31,7 @@ streamlit run frontend.py
 http://localhost:8501/?page=projects
 ```
 
-- Load specific securities:
+- Load securities:
 ```
 http://localhost:8501/?symbols=SPY,AAPL,GE
 ```
