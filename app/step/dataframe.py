@@ -7,7 +7,7 @@ def is_valid(data):
     return True
 
 
-def render(data):
+def render(data, index):
     df = data.df
 
     st.write(df)

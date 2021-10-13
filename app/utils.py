@@ -17,21 +17,21 @@ def read_google_spreadsheet(key, gid=0):
     return pd.read_csv(f'https://docs.google.com/spreadsheets/d/{key}/export?format=csv&gid={gid}')
 
 
-def read_file(path):
+def read_file(path: str):
     return Path(path).read_text()
 
 
-def normalize(df):
+def normalize(df: pd.DataFrame):
     min = df.min()
     max = df.max()
     return (df - min) / (max - min)
 
 
-def standardize(df):
+def standardize(df: pd.DataFrame):
     return (df - df.mean()) / df.std()
 
 
-def load_directory(path):
+def load_directory(path: str):
     import os
     import importlib.util
 
@@ -49,3 +49,15 @@ def load_directory(path):
             modules[name] = module
 
     return modules
+
+
+# Plot data with (series, symbol) column layout (e.g. Yahoo Finance)
+def plot_time_series(df: pd.DataFrame):
+    # Prevent error caused by MultiIndex columns
+    if df.columns.nlevels > 1:
+        df = df.copy()
+        cols = df.columns
+        if len(df.columns.get_level_values(0).unique()) <= 1:
+            cols = [col[1:] for col in cols]
+        df.columns = [', '.join(col) for col in cols]
+    st.line_chart(df)

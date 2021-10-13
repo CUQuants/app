@@ -9,6 +9,9 @@ from app.page.securities import SecurityPage
 
 
 class Main(View):
+    # Root of the `View` render tree
+    __root__ = True
+
     def __init__(self):
         self.cache_hours = 1
         requests_cache.install_cache(expire_after=dt.timedelta(hours=self.cache_hours))

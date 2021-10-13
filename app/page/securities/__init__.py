@@ -5,7 +5,7 @@ import datetime as dt
 import pandas as pd
 
 from app.page import Page
-from app.utils import load_directory
+from app.utils import load_directory, plot_time_series
 from app.view import View
 from app.page.securities.summary import SecuritySummary
 from app.page.securities.data import SecurityData
@@ -30,28 +30,27 @@ class SecurityPage(Page):
         # Use symbols from URL query param
         default_symbols = st.experimental_get_query_params().get(self.symbols_query_param, '')
         if isinstance(default_symbols, list):
-            default_symbols = ", ".join(default_symbols)
+            default_symbols = ', '.join(default_symbols)
 
-        symbols_text = st.text_input("Enter securities (comma-separated):", default_symbols).upper()
-        symbols = [symbol.strip() for symbol in symbols_text.split(",") if len(symbol.strip())]
+        symbols_text = st.text_input('Enter securities (comma-separated):', default_symbols).upper()
+        symbols = [symbol.strip() for symbol in symbols_text.split(',') if len(symbol.strip())]
 
         # Save symbols to URL query param
         # st.experimental_set_query_params(**{self.securities_query_param: symbols_text or ''})
 
-        detail = SecurityDetail(symbols)
-        detail.render()
+        # Details and visualization
+        detail = SecurityDetail(SecurityData(symbols))
+        current_data = detail.render()  # Returns data with differencing, normalization, etc.
 
+        # Custom analysis steps
         if len(symbols):
-            current_data = detail.data
-
             for i in range(100):  # Limit number of steps in case of infinite loop
                 if i < len(self.query_steps):
                     # Load step from query param
                     module = self.step_modules.get(self.query_steps[i], None)
-                    st.write(module)
-                    if not module:
+                    if not module or not module.is_valid(current_data):
                         continue
-                    st.write(f'## Step from query param: {module.title}')
+                    st.write(f'#### {module.title}')
                 else:
                     # Load step from dropdown
                     names = sorted(name for name, module in self.step_modules.items() if module.is_valid(current_data))
@@ -59,30 +58,25 @@ class SecurityPage(Page):
                     titles = [self.step_modules[name].title for name in names]
                     title = st.selectbox('Add step:', [default_option] + titles, key=f'step_{i}')
                     if title == default_option:
+                        st.write(f'**Column types:**', ', '.join(current_data.column_types))
+                        st.write(f'**Symbols:**', ', '.join(current_data.symbols))
                         break
                     module = self.step_modules[names[titles.index(title)]]
 
-                current_data = module.render(current_data) or current_data
+                # Update data for next step
+                current_data = module.render(current_data, i) or current_data
 
 
 class SecurityDetail(View):
 
-    def __init__(self, symbols):
-        self.symbols = symbols
+    def __init__(self, data: SecurityData):
+        self.data = data
+        self.symbols = data.symbols
 
         if len(self.symbols) == 1:
             self.summary = SecuritySummary(self.symbols[0])
         else:
             self.summary = None
-
-        self.data = SecurityData(self.symbols)
-
-        # if len(self.symbols) == 1:
-        #     self.output = "single"
-        # elif len(self.symbols) == 2:
-        #     self.output = "pair"
-        # elif len(self.symbols) > 2:
-        #     self.output = "portfolio"
 
     def render(self):
         if len(self.symbols) == 0:
@@ -93,7 +87,7 @@ class SecurityDetail(View):
         if self.summary:
             self.render_summary()
 
-        self.plot_with_controls(start, end, columns)
+        return self.plot_with_controls(start, end, columns)
 
     def render_summary(self):
         name_period = False
@@ -121,37 +115,38 @@ class SecurityDetail(View):
 
         with col1:
             # OHLCV column filter
-            columns = [col for col in self.data.get_columns() if st.checkbox(col, col == 'Adj Close')]
+            column_types = [col for col in self.data.column_types if st.checkbox(col, col == 'Adj Close', key=self.next_key())]
 
         with col2:
-            dates_method = st.radio("Select dates type", ["Slider", "Months back", "Years back"])
+            dates_method = st.radio("Select dates type", ["Slider", "Months back", "Years back"], key=self.next_key())
 
             if dates_method == "Slider":
-                start, end = st.slider("Select time frame:", value=self.data.get_start_end())
+                start, end = st.slider("Select time frame:", value=self.data.get_start_end(), key=self.next_key())
             elif dates_method == "Months back":
-                months = st.number_input("Select months:", min_value=1)
+                months = st.number_input("Select months:", min_value=1, key=self.next_key())
                 end = dt.datetime.today()
                 start = end - pd.DateOffset(months=months)
             elif dates_method == "Years back":
-                years = st.number_input("Select years:", min_value=1)
+                years = st.number_input("Select years:", min_value=1, key=self.next_key())
                 end = dt.datetime.today()
                 start = end - pd.DateOffset(years=years)
 
-        return start, end, columns
+        return start, end, column_types
 
     def plot_with_controls(self, start, end, columns):
 
         col1, col2 = st.columns((8, 2))
 
         with col2:
-            log = st.checkbox("Logarithmic", len(self.data.symbols) > 1)
-            diff = st.checkbox("Difference")
-            normalize = st.checkbox("Normalize")
-            standardize = st.checkbox("Standardize")
-            trend_window = st.number_input("Moving Average", min_value=0, max_value=len(self.data.df.index), step=5)
-            subtract_trend = st.checkbox("Subtract Trend") if trend_window else 0
+            log = st.checkbox("Logarithmic", len(self.data.symbols) > 1, key=self.next_key())
+            diff = st.checkbox("Difference", key=self.next_key())
+            normalize = st.checkbox("Normalize", key=self.next_key())
+            standardize = st.checkbox("Standardize", key=self.next_key())
+            trend_window = st.number_input("Moving Average", min_value=0, max_value=len(self.data.df.index), step=5,
+                                           key=self.next_key())
+            subtract_trend = st.checkbox("Subtract Trend", key=self.next_key()) if trend_window else 0
 
-            df = self.data.preprocess(
+            transformed_data = self.data.transform(
                 start=start,
                 end=end,
                 columns=columns,
@@ -162,10 +157,9 @@ class SecurityDetail(View):
                 trend_window=trend_window,
                 subtract_trend=subtract_trend,
             )
+            df = transformed_data.df
 
         with col1:
-            # Prevent error caused by MultiIndex columns
-            if len(self.symbols) > 1:
-                df.columns = [', '.join(col) for col in df.columns]
+            plot_time_series(df)
 
-            st.line_chart(df)
+        return transformed_data

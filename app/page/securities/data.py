@@ -13,25 +13,29 @@ class SecurityData:
     Wrapper around a `pandas.DataFrame` consisting of OHLCV data for one or more securities.
     """
 
-    def __init__(self, symbols):
+    def __init__(self, symbols, df: pd.DataFrame = None):
+        if df is None:
+            end = dt.date.today()
+            start = dt.date(end.year - 50, end.month, end.day)
+
+            df = yf.download(symbols, start, end) if len(symbols) else pd.DataFrame()
+            df.sort_index(inplace=True)
+
+        if len(symbols) == 1 and df.columns.nlevels == 1:
+            # Add symbol column if missing
+            symbol = symbols[0]
+            df = pd.DataFrame({(col, symbol): df[col] for col in df.columns})
+
         self.symbols = symbols
-
-        end = dt.date.today()
-        start = dt.date(end.year - 50, end.month, end.day)
-
-        self.df = yf.download(self.symbols, start, end) if len(symbols) else pd.DataFrame()
-        self.df.sort_index(inplace=True)
+        self.column_types = df.columns.get_level_values(0).unique() if df.columns.nlevels > 1 else df.columns
+        self.df = df
 
     def get_start_end(self):
         return self.df.index[0].to_pydatetime(), self.df.index[-1].to_pydatetime()
 
-    def get_columns(self):
-        if isinstance(self.df.columns, pd.MultiIndex):
-            return self.df.columns.levels[0]
-        return self.df.columns
-
-    def preprocess(
+    def transform(
             self,
+            df=None,
             start=None,
             end=None,
             columns=None,
@@ -42,7 +46,8 @@ class SecurityData:
             trend_window=0,
             subtract_trend=False,
     ):
-        df = self.df
+        if df is None:
+            df = self.df
 
         if start is not None:
             df = df[df.index >= start]
@@ -69,4 +74,4 @@ class SecurityData:
             df_trend = df.rolling(trend_window).mean()
             df = df - df_trend if subtract_trend else df_trend
 
-        return df
+        return SecurityData(self.symbols, df)

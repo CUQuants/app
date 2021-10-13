@@ -32,7 +32,7 @@ Load specific securities:
 
 Load one or more analysis steps:
 
-`http://localhost:8501/?symbols=AAPL,SPY,GE&steps=pca`
+`http://localhost:8501/?symbols=SPY,AAPL,MSFT,GE,TSLA&steps=pca`
 
 Load a specific topic:
 
