@@ -24,19 +24,27 @@ streamlit run frontend.py
 ```
 - Access the app by visiting [http://localhost:8501](http://localhost:8501) in your web browser.
 
-### Query parameters
+## How to use the app's query parameters:
 
-Load specific securities:
+- Open a specific page:
+```
+http://localhost:8501/?page=projects
+```
 
-`http://localhost:8501/?symbols=SPY,AAPL,GE`
+- Load specific securities:
+```
+http://localhost:8501/?symbols=SPY,AAPL,GE
+```
 
-Load one or more analysis steps:
+- Load one or more analysis steps:
+```
+http://localhost:8501/?symbols=SPY,AAPL,MSFT,GE,TSLA&steps=pca
+```
 
-`http://localhost:8501/?symbols=SPY,AAPL,MSFT,GE,TSLA&steps=pca`
-
-Load a specific topic:
-
-`http://localhost:8501/?topic=_template`
+- Load a specific topic:
+```
+http://localhost:8501/?topic=securities
+```
 
 ## How to update to the latest version:
 
