@@ -5,9 +5,7 @@ import pandas as pd
 
 def input_symbols(query_key='symbols'):
     # Use symbols from URL query param
-    default_symbols = st.experimental_get_query_params().get(query_key)
-    if isinstance(default_symbols, list):
-        default_symbols = ', '.join(default_symbols)
+    default_symbols = ', '.join(st.experimental_get_query_params().get(query_key, []))
 
     symbols_text = st.text_input("Enter securities (comma-separated):", default_symbols).upper()
     return [symbol.strip() for symbol in symbols_text.split(",") if len(symbol.strip())]

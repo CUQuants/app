@@ -50,20 +50,20 @@ class SecurityPage(Page):
                     module = self.step_modules.get(self.query_steps[i], None)
                     if not module or not module.is_valid(current_data):
                         continue
-                    st.write(f'#### {module.title}')
                 else:
                     # Load step from dropdown
                     names = sorted(name for name, module in self.step_modules.items() if module.is_valid(current_data))
                     default_option = '...'
                     titles = [self.step_modules[name].title for name in names]
-                    title = st.selectbox('Add step:', [default_option] + titles, key=f'step_{i}')
+                    title = st.sidebar.selectbox('Next analysis step:', [default_option] + titles, key=f'step_{i}')
                     if title == default_option:
-                        st.write(f'**Column types:**', ', '.join(current_data.column_types))
-                        st.write(f'**Symbols:**', ', '.join(current_data.symbols))
+                        st.sidebar.write(f'**Column types:**', ', '.join(current_data.column_types))
+                        st.sidebar.write(f'**Symbols:**', ', '.join(current_data.symbols))
                         break
                     module = self.step_modules[names[titles.index(title)]]
 
-                # Update data for next step
+                st.write(f'#### {module.title}')
+                # Render and update data for next step
                 current_data = module.render(current_data, i) or current_data
 
 
